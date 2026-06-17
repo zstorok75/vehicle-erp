@@ -1,0 +1,17 @@
+services:
+    erp-db:
+        image: mysql:8.0
+        container_name: vehicle_erp_mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: rootsecretpassword
+            MYSQL_DATABASE: vehicle_erp
+            MYSQL_USER: erp_user
+            MYSQL_PASSWORD: erp_password
+        ports:
+            - "3306:3306"
+        volumes:
+            - erp_db_data:/var/lib/mysql
+
+volumes:
+    erp_db_data:
