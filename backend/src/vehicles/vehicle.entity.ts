@@ -20,6 +20,6 @@ export class Vehicle {
   @Column({ type: 'int', default: 2026 })
   year!: number;
 
-  @Column({ default: 'ACTIVE' })
+  @Column({ default: 'Aktív' })
   status!: string;
 }

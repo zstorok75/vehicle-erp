@@ -18,6 +18,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+  // CORS engedélyezése minden originnek (vagy finomhangolva)
+  app.enableCors();
+
   // 2. SZERVER INDÍTÁSA
   await app.listen(3000);
 }

@@ -1,0 +1,51 @@
+<div class="p-6 bg-gray-900 min-h-screen text-white">
+  <div
+    class="max-w-4xl mx-auto bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-700"
+  >
+    <div class="px-6 py-4 border-b border-gray-700 flex justify-between items-center">
+      <h2 class="text-xl font-semibold text-emerald-400">Járműpark kezelő</h2>
+      <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-medium">
+        Összesen: {{ vehicles().length }}
+      </span>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-gray-800/50 text-gray-400 text-sm border-b border-gray-700">
+            <th class="p-4 font-medium">Márka / Modell</th>
+            <th class="p-4 font-medium">Évjárat</th>
+            <th class="p-4 font-medium">Státusz</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-700/50">
+          @for (vehicle of vehicles(); track vehicle.id) {
+            <tr class="hover:bg-gray-700/30 transition-colors">
+              <td class="p-4 font-medium text-gray-250">{{ vehicle.make }} {{ vehicle.model }}</td>
+              <td class="p-4 text-gray-400">{{ vehicle.year }}</td>
+              <td class="p-4">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  [class.bg-emerald-500/10]="vehicle.status === 'Aktív'"
+                  [class.text-emerald-400]="vehicle.status === 'Aktív'"
+                  [class.bg-amber-500/10]="vehicle.status === 'Szervizben'"
+                  [class.text-amber-400]="vehicle.status === 'Szervizben'"
+                  [class.bg-gray-500/10]="vehicle.status === 'Inaktív'"
+                  [class.text-gray-400]="vehicle.status === 'Inaktív'"
+                >
+                  {{ vehicle.status }}
+                </span>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="p-8 text-center text-gray-500">
+                Nincsenek elérhető járművek az adatbázisban.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
