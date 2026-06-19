@@ -4,8 +4,7 @@ import { VehicleList } from './features/vehicles/components/vehicle-list/vehicle
 
 @Component({
   selector: 'app-root',
-  // imports: [RouterOutlet, VehicleList],
-  imports: [VehicleList],
+  imports: [RouterOutlet, VehicleList],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
