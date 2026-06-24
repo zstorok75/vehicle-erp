@@ -2,7 +2,7 @@ import { Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { UpdateVehicleDto } from './dto/update-vehicle.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Vehicle } from './vehicle.entity';
+import { Vehicle } from './entities/vehicle.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
