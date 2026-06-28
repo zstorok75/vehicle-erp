@@ -29,7 +29,11 @@ export default tseslint.config(
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
-      "prettier/prettier": ["error", { endOfLine: "auto" }],
+      '@typescript-eslint/no-unsafe-call': 'off', // Kikapcsolja a dekorátorok miatti riasztást
+      '@typescript-eslint/no-unsafe-assignment': 'off', // Megengedi a típus-hozzárendelést
+      '@typescript-eslint/no-unsafe-member-access': 'off', // A tagok elérését engedi
+
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
     },
   },
 );
