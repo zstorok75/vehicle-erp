@@ -1,22 +1,35 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { Vehicle } from './vehicles/entities/vehicle.entity';
 import { VehiclesModule } from './vehicles/vehicles.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      username: 'erp_user',
-      password: 'erp_password',
-      database: 'vehicle_erp',
-      entities: [Vehicle], // Ide jönnek a tábláink (Entity-k)
-      synchronize: true, // Automatikusan létrehozza a táblákat a kódból (CSAK FEJLESZTÉSKOR HASZNÁLHATÓ!!!)
-      logging: true,
+    // Az .env file beolvasása
+    ConfigModule.forRoot({ isGlobal: true }),
+
+    // A TypeORM konfigurálása aszinkron módba
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          type: 'mysql',
+          host: configService.get<string>('DB_HOST'),
+          port: configService.get<number>('DB_PORT'),
+          username: configService.get<string>('DB_USERNAME'),
+          password: configService.get<string>('DB_PASSWORD'),
+          database: configService.get<string>('DB_DATABASE'),
+          // Automatikusan létrehozza a táblákat a kódból ha TRUE (CSAK FEJLESZTÉSKOR HASZNÁLHATÓ!!!)
+          synchronize: configService.get<boolean>('DB_SYNCHRONIZE'),
+          // Automatikusan loggol minden DB műveletet, fejlesztésnél hibakereséshez hasznos
+          logging: configService.get<boolean>('DB_LOGGING'),
+          // Automatikusan betölti az összes @Entity()-t
+          autoLoadEntities: configService.get<boolean>('DB_AUTO_LOAD_ENTITIES'),
+        };
+      },
     }),
     VehiclesModule,
   ],
