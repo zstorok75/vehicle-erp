@@ -1,25 +1,30 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('vehicles')
 export class Vehicle {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: 'varchar', unique: true, nullable: true })
-  licensePlate!: string | null;
+  @Column({ type: 'varchar', nullable: true })
+  licensePlate?: string;
 
-  @Column({ unique: true })
+  @Column({ type: 'varchar', unique: true, nullable: false, length: 17 })
   vin!: string;
 
-  @Column()
-  make!: string;
+  @Column({ type: 'varchar', nullable: false })
+  brand!: string;
 
-  @Column()
+  @Column({ type: 'varchar', nullable: false })
   model!: string;
 
-  @Column({ type: 'int', default: 2026 })
-  year!: number;
+  @Column({ type: 'int', nullable: false, default: new Date().getFullYear() })
+  productionYear!: number;
 
-  @Column({ default: 'Aktív' })
-  status!: string;
+  @CreateDateColumn()
+  createdAt!: Date;
 }
