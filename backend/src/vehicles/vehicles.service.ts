@@ -19,4 +19,9 @@ export class VehiclesService implements OnModuleInit {
     const newVehicle = this.vehicleRepository.create(createVehicleDto);
     return await this.vehicleRepository.save(newVehicle);
   }
+
+  // Összes jármű lekérdezése
+  async findAll(): Promise<Vehicle[]> {
+    return await this.vehicleRepository.find();
+  }
 }

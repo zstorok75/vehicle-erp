@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -13,11 +13,10 @@ export class VehiclesController {
     return this.vehiclesService.create(createVehicleDto);
   }
 
-  // @Get()
-  // findAll() {
-  //   // return this.vehiclesService.findAll();
-  //   throw new Error('This endpoint doesn`t work yet');
-  // }
+  @Get()
+  findAll() {
+    return this.vehiclesService.findAll();
+  }
 
   // @Get(':id')
   // findOne(@Param('id') id: string) {
