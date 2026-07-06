@@ -25,7 +25,8 @@ import { VehiclesModule } from './vehicles/vehicles.module';
           // Automatikusan létrehozza a táblákat a kódból ha TRUE (CSAK FEJLESZTÉSKOR HASZNÁLHATÓ!!!)
           synchronize: configService.get<boolean>('DB_SYNCHRONIZE'),
           // Automatikusan loggol minden DB műveletet, fejlesztésnél hibakereséshez hasznos
-          logging: configService.get<boolean>('DB_LOGGING'),
+          // logging: configService.get<boolean>('DB_LOGGING'),
+          logging: true,
           // Automatikusan betölti az összes @Entity()-t
           autoLoadEntities: configService.get<boolean>('DB_AUTO_LOAD_ENTITIES'),
         };
