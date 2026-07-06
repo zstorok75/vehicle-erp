@@ -13,29 +13,21 @@
       <table class="w-full text-left border-collapse">
         <thead>
           <tr class="bg-gray-800/50 text-gray-400 text-sm border-b border-gray-700">
-            <th class="p-4 font-medium">Márka / Modell</th>
-            <th class="p-4 font-medium">Évjárat</th>
-            <th class="p-4 font-medium">Státusz</th>
+            <th class="p-4 font-medium">Rendszám</th>
+            <th class="p-4 font-medium">Márka</th>
+            <th class="p-4 font-medium">Modell</th>
+            <th class="p-4 font-medium">Alvázszám</th>
+            <th class="p-4 font-medium">Gyártási év</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-700/50">
           @for (vehicle of vehicles(); track vehicle.id) {
             <tr class="hover:bg-gray-700/30 transition-colors">
-              <td class="p-4 font-medium text-gray-250">{{ vehicle.make }} {{ vehicle.model }}</td>
-              <td class="p-4 text-gray-400">{{ vehicle.year }}</td>
-              <td class="p-4">
-                <span
-                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                  [class.bg-emerald-500/10]="vehicle.status === 'Aktív'"
-                  [class.text-emerald-400]="vehicle.status === 'Aktív'"
-                  [class.bg-amber-500/10]="vehicle.status === 'Szervizben'"
-                  [class.text-amber-400]="vehicle.status === 'Szervizben'"
-                  [class.bg-gray-500/10]="vehicle.status === 'Inaktív'"
-                  [class.text-gray-400]="vehicle.status === 'Inaktív'"
-                >
-                  {{ vehicle.status }}
-                </span>
-              </td>
+              <td class="p-4 font-medium text-gray-250">{{ vehicle.licensePlate }}</td>
+              <td class="p-4 font-medium text-gray-250">{{ vehicle.brand }}</td>
+              <td class="p-4 font-medium text-gray-250">{{ vehicle.model }}</td>
+              <td class="p-4 font-medium text-gray-250">{{ vehicle.vin }}</td>
+              <td class="p-4 text-gray-400">{{ vehicle.productionYear }}</td>
             </tr>
           } @empty {
             <tr>

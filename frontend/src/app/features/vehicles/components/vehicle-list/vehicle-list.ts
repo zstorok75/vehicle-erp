@@ -1,6 +1,6 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { VehicleService } from '../../services/vehicle.service';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Vehicle } from '../../models/vehicle.interface';
 
 @Component({
   selector: 'app-vehicle-list',
@@ -11,5 +11,5 @@ import { toSignal } from '@angular/core/rxjs-interop';
 export class VehicleList {
   private vehicleService = inject(VehicleService);
 
-  public vehicles = toSignal(this.vehicleService.getVehicles(), { initialValue: [] });
+  public vehicles = signal<Vehicle[]>([]);
 }
