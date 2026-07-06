@@ -22,7 +22,11 @@ export class Vehicle {
   @Column({ type: 'varchar', nullable: false })
   model!: string;
 
-  @Column({ type: 'int', nullable: false, default: new Date().getFullYear() })
+  @Column({
+    type: 'int',
+    nullable: false,
+    default: Number(new Date().getFullYear()),
+  })
   productionYear!: number;
 
   @CreateDateColumn({ type: Date })
