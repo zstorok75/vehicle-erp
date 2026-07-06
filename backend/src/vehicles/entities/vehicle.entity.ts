@@ -8,9 +8,9 @@ import {
 @Entity('vehicles')
 export class Vehicle {
   @PrimaryGeneratedColumn()
-  id!: number;
+  id?: number;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: 'varchar', nullable: true, length: 20 })
   licensePlate?: string;
 
   @Column({ type: 'varchar', unique: true, nullable: false, length: 17 })
@@ -25,6 +25,6 @@ export class Vehicle {
   @Column({ type: 'int', nullable: false, default: new Date().getFullYear() })
   productionYear!: number;
 
-  @CreateDateColumn()
-  createdAt!: Date;
+  @CreateDateColumn({ type: Date })
+  createdAt?: Date;
 }
