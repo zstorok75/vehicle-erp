@@ -1,73 +1,90 @@
+<!-- Tailwind CSS: Flexbox elrendezés és padding -->
 <div
-  class="max-w-2xl mx-auto p-6 bg-slate-50 dark:bg-slate-900 rounded-3xl border-2 border-slate-50 dark:border-slate-800 shadow-sm mt-6"
+  class="max-w-3xl mx-auto my-8 p-6 md:p-8 bg-m3-inverse-primary text-m3-on-primary-container rounded-3xl border border-m3-outline shadow-2xl"
 >
-  <div class="flex flex-row justify-between">
-    <h2 class="text-2xl text-white font-bold tracking-tight">Új jármű rögzítése</h2>
-    <h4 class="text-sm text-white tracking-tight mt-2">
-      a <span class="text-sm text-red-500">*</span>-al jelölt mezők kitöltése kötelező!
-    </h4>
-  </div>
-  <form
-    [formGroup]="vehicleForm"
-    (ngSubmit)="onSubmit()"
-    class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6"
+  <div
+    class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-m3-outline pb-4 mb-6"
   >
-    <!-- Rendszám mező -->
-    <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Rendszám</mat-label>
-      <input matInput formControlName="licensePlate" placeholder="AA-SS-458" uppercase="true" />
-      <mat-hint class="dark:text-white">Opcionális</mat-hint>
-      @if (vehicleForm.get('licensePlate')?.hasError('maxLength')) {
-        <mat-error>A rendszám maximum 10 karakter lehet</mat-error>
-      }
-    </mat-form-field>
+    <div>
+      <h2 class="text-2xl font-semibold tracking-tight">
+        {{ selectedVehicle() ? 'Jármű adatainak módosítása' : 'Új jármű rögzítése' }}
+      </h2>
+      <p class="text-sm mt-1">Add meg a gépjármű azonosításához szükséges adatokat.</p>
+    </div>
 
-    <!-- Alvázszám mező -->
-    <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Alvázszám (VIN)</mat-label>
-      <input
-        matInput
-        formControlName="vin"
-        placeholder="TMBAB74X961753248"
-        maxlength="17"
-        minlength="17"
-        uppercase
-        required
-      />
-      <mat-hint class="dark:text-white">Kötelező</mat-hint>
-      @if (vehicleForm.get('vin')?.touched && vehicleForm.get('vin')?.invalid) {
-        <mat-error>Az alvázszám pontosan 17 karakter</mat-error>
-      }
-    </mat-form-field>
+    @if (selectedVehicle()?.createdAt) {
+      <div
+        class="mt-2 md:mt-0 flex items-center gap-1.5 px-3 py-1.5 text-m3-on-primary-container text-xs font-medium"
+      >
+        <!-- <mat-icon class="scale-75 w-4 h-4 leading-none">calendar_today</mat-icon> -->
+        <span>Rendszerbe véve: {{ selectedVehicle()?.createdAt | date: 'medium' }}</span>
+      </div>
+    }
+  </div>
 
-    <!-- Márka mező -->
-    <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Márka</mat-label>
-      <input matInput formControlName="make" placeholder="Pl.: Audi, Skoda, Tesla" required />
-      <mat-hint class="dark:text-white">Kötelező</mat-hint>
-      <mat-error>A márka megadása kötelező!</mat-error>
-    </mat-form-field>
+  <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="text-m3-on-primary-container">Rendszám</mat-label>
+        <input matInput formControlName="licensePlate" placeholder="ABC-123 vagy AA-BB-123" />
+        <mat-icon matSuffix class="text-m3-on-primary-container">badge</mat-icon>
+        @if (vehicleForm.get('licensePlate')?.hasError('pattern')) {
+          <mat-error>Helytelen rendszám formátum!</mat-error>
+        }
+      </mat-form-field>
 
-    <!-- Modell mező -->
-    <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Modell</mat-label>
-      <input matInput formControlName="model" placeholder="Pl.: Q7, Superb, Model S" required />
-      <mat-error>A modell megadása kötelező!</mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="text-m3-on-primary-container">Alvázszám (VIN)</mat-label>
+        <input matInput #vin formControlName="vin" placeholder="17 jegyű azonosító" />
+        <mat-icon matSuffix class="text-m3-on-primary-container">fingerprint</mat-icon>
+        <mat-hint align="start" class="text-m3-on-primary-container">
+          Az alvázszám 17 karakter hosszú
+        </mat-hint>
+        <mat-hint align="end" class="text-m3-on-primary-container">
+          {{ vin.value.length }} / 17
+        </mat-hint>
+        @if (vehicleForm.get('vin')?.hasError('maxlength')) {
+          <mat-error>Az alvázszám túl hosszú!</mat-error>
+        } @else if (vehicleForm.get('vin')?.hasError('minlength')) {
+          <mat-error>Az alvázszám túl rövid!</mat-error>
+        } @else if (vehicleForm.get('vin')?.invalid && vehicleForm.get('vin')?.touched) {
+          <mat-error>Az alvázszám hiányzik!</mat-error>
+        }
+      </mat-form-field>
 
-    <!-- Gyártási év mező -->
-    <mat-form-field appearance="fill" class="w-full">
-      <mat-label>Gyártási év</mat-label>
-      <input matInput type="number" formControlName="year" placeholder="1965" required />
-      @if (vehicleForm.get('year')?.hasError('min') || vehicleForm.get('year')?.hasError('max')) {
-        <mat-error>Nem megfelelő évszám (1900 - {{ this.maxYear }})!</mat-error>
-      }
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="text-m3-on-primary-container">Márka</mat-label>
+        <input matInput formControlName="brand" placeholder="Pl. Volkswagen, BMW" />
+        @if (vehicleForm.get('brand')?.touched && vehicleForm.get('brand')?.invalid) {
+          <mat-error>A márka megadása kötelező!</mat-error>
+        }
+      </mat-form-field>
 
-    <div class="md:col-span-2 flex justify-end gap-3 mt-4">
-      <button type="button" matButton class="px-6">Mégse</button>
-      <button type="submit" mat-raised-button color="primary" [disabled]="vehicleForm.invalid">
-        Mentés
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label class="text-m3-on-primary-container">Modell</mat-label>
+        <input matInput formControlName="model" placeholder="Pl. Golf, 320i" />
+        @if (vehicleForm.get('model')?.touched && vehicleForm.get('model')?.invalid) {
+          <mat-error>A modell megadása kötelező!</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full md:col-span-2">
+        <mat-label class="text-m3-on-primary-container">Gyártási év</mat-label>
+        <input matInput type="number" formControlName="productionYear" [max]="maxYear" min="1900" />
+        <mat-icon matSuffix class="text-m3-on-primary-container">event</mat-icon>
+        @if (
+          vehicleForm.get('productionYear')?.touched && vehicleForm.get('productionYear')?.invalid
+        ) {
+          <mat-error>Kérjük, valós gyártási évet adj meg (1900 - {{ maxYear }})!</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="flex items-center justify-end gap-3 pt-4 border-t border-m3-outline">
+      <button matButton="outlined" (click)="resetForm()">Mégse</button>
+      <button matButton="elevated" color="primary" type="submit">
+        <mat-icon class="mr-2 text-m3-on-primary-container">save</mat-icon>
+        {{ selectedVehicle() ? 'Módosítások mentése' : 'Jármű mentése' }}
       </button>
     </div>
   </form>
