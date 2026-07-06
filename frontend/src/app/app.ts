@@ -1,10 +1,9 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { VehicleForm } from './features/vehicles/components/vehicle-form/vehicle-form';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, VehicleForm],
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
