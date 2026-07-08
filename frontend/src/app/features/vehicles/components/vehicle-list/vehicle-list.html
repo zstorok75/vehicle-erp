@@ -1,43 +1,149 @@
-<div class="p-6 bg-gray-900 min-h-screen text-white">
+<div
+  class="max-w-3xl max-h-screen mx-auto my-8 p-6 md:p-8 bg-m3-inverse-primary text-m3-on-primary-container rounded-3xl border border-m3-outline shadow-2xl"
+>
   <div
-    class="max-w-4xl mx-auto bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-700"
+    class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-m3-outline/50 pb-4 mb-6"
   >
-    <div class="px-6 py-4 border-b border-gray-700 flex justify-between items-center">
-      <h2 class="text-xl font-semibold text-emerald-400">Járműpark kezelő</h2>
-      <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded-full font-medium">
-        Összesen: {{ vehicles().length }}
-      </span>
+    <div>
+      <h2 class="text-2xl font-semibold tracking-tight">Járművek listája</h2>
+      <p class="text-sm text-m3-on-primary-container/70 mt-1">
+        A rendszerben tárolt gépjárművek listája.
+      </p>
     </div>
+  </div>
 
-    <div class="overflow-x-auto">
-      <table class="w-full text-left border-collapse">
-        <thead>
-          <tr class="bg-gray-800/50 text-gray-400 text-sm border-b border-gray-700">
-            <th class="p-4 font-medium">Rendszám</th>
-            <th class="p-4 font-medium">Márka</th>
-            <th class="p-4 font-medium">Modell</th>
-            <th class="p-4 font-medium">Alvázszám</th>
-            <th class="p-4 font-medium">Gyártási év</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-700/50">
-          @for (vehicle of vehicles(); track vehicle.id) {
-            <tr class="hover:bg-gray-700/30 transition-colors">
-              <td class="p-4 font-medium text-gray-250">{{ vehicle.licensePlate }}</td>
-              <td class="p-4 font-medium text-gray-250">{{ vehicle.brand }}</td>
-              <td class="p-4 font-medium text-gray-250">{{ vehicle.model }}</td>
-              <td class="p-4 font-medium text-gray-250">{{ vehicle.vin }}</td>
-              <td class="p-4 text-gray-400">{{ vehicle.productionYear }}</td>
-            </tr>
-          } @empty {
-            <tr>
-              <td colspan="3" class="p-8 text-center text-gray-500">
-                Nincsenek elérhető járművek az adatbázisban.
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+  <div class="overflow-x-auto rounded-xl border border-m3-outline/50 w-full">
+    <mat-form-field class="w-full bg-m3-surface">
+      <mat-label class="font-semibold text-m3-on-primary-container">Keresés</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Pl.: fabia v. Peugeot v. ABC-123"
+        #filterInput
+        class="bg-m3-surface"
+      />
+    </mat-form-field>
+    <table
+      mat-table
+      [dataSource]="listData"
+      matSort
+      class="w-full table-fixed text-m3-on-primary-container"
+    >
+      <!-- No Column -->
+      <ng-container matColumnDef="index">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          class="px-6 py-4 text-sm font-semibold tracking-wide text-m3-on-primary-container"
+        >
+          No.
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let index = index"
+          class="border-b border-m3-outline/30 text-sm font-mono text-m3-on-primary-container"
+        >
+          {{ index + 1 }}
+        </td>
+      </ng-container>
+      <!-- Brand column -->
+      <ng-container matColumnDef="brand">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="px-6 py-4 text-sm font-semibold tracking-wide text-m3-on-primary-container"
+        >
+          Márka
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let vehicle"
+          class="border-b border-m3-outline/30 text-sm font-mono text-m3-on-primary-container"
+        >
+          {{ vehicle.brand }}
+        </td>
+      </ng-container>
+      <!-- Model column -->
+      <ng-container matColumnDef="model">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="px-6 py-4 text-sm font-semibold tracking-wide text-m3-on-primary-container"
+        >
+          Modell
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let vehicle"
+          class="border-b border-m3-outline/30 text-sm font-mono text-m3-on-primary-container"
+        >
+          {{ vehicle.model }}
+        </td>
+      </ng-container>
+      <!-- Vin column -->
+      <ng-container matColumnDef="vin">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="px-6 py-4 text-sm font-semibold tracking-wide text-m3-on-primary-container"
+        >
+          Alvázszám
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let vehicle"
+          class="border-b border-m3-outline/30 text-sm font-mono text-m3-on-primary-container"
+        >
+          {{ vehicle.vin }}
+        </td>
+      </ng-container>
+      <!-- Licenese plate column -->
+      <ng-container matColumnDef="licensePlate">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="px-6 py-4 text-sm font-semibold tracking-wide text-m3-on-primary-container"
+        >
+          Rendszám
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let vehicle"
+          class="border-b border-m3-outline/30 text-sm font-mono text-m3-on-primary-container"
+        >
+          {{ vehicle.licensePlate || 'Nincs' }}
+        </td>
+      </ng-container>
+      <!-- Production year column -->
+      <ng-container matColumnDef="productionYear">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="px-6 py-4 text-sm font-semibold tracking-wide text-m3-on-primary-container"
+        >
+          Évjárat
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let vehicle"
+          class="border-b border-m3-outline/30 text-sm font-mono text-m3-on-primary-container"
+        >
+          {{ vehicle.productionYear }}
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr
+        mat-row
+        (click)="selectVehicle(row)"
+        *matRowDef="let row; columns: displayedColumns"
+        matRipple
+        class="group hover:bg-m3-inverse-primary/30 transition-colors duration-300 cursor-pointer"
+      ></tr>
+    </table>
   </div>
 </div>
