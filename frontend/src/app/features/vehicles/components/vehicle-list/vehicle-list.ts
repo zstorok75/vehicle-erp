@@ -1,14 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  effect,
-  inject,
-  OnInit,
-  signal,
-  viewChild,
-  ViewChild,
-  WritableSignal,
-} from '@angular/core';
+import { Component, effect, inject, OnInit, viewChild } from '@angular/core';
 import { VehicleService } from '../../services/vehicle.service';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { UpdateVehicle } from '../../models/updateVehicle.interface';
