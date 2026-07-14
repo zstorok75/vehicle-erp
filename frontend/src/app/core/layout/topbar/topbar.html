@@ -1,0 +1,88 @@
+<mat-toolbar
+  class="sticky top-0 z-50 !bg-m3-surface !text-m3-on-surface border-b border-m3-outline/30 shadow-md transition-all duration-300"
+>
+  <div class="w-full mx-auto flex items-center justify-between px-1 md:px-2">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-2 cursor-pointer text-m3-primary">
+        <mat-icon>directions_car</mat-icon>
+        <span class="font-semibold text-lg tracking-tight">AutoManager</span>
+      </div>
+      <nav class="hidden md:flex items-center gap-1">
+        <a
+          mat-button
+          routerLink="/board"
+          routerLinkActive="!bg-m3-primary-container !text-m3-on-primary-container font-semibold"
+        >
+          <mat-icon class="mr-1">dashboard</mat-icon>
+          Áttekintés
+        </a>
+        <a
+          mat-button
+          routerLink="/vehicles"
+          routerLinkActive="!bg-m3-primary-container !text-m3-on-primary-container font-semibold"
+        >
+          <mat-icon class="mr-1">directions_car</mat-icon>
+          Járművek
+        </a>
+        <a
+          mat-button
+          routerLink="/service"
+          routerLinkActive="!bg-m3-primary-container !text-m3-on-primary-container font-semibold"
+        >
+          <mat-icon class="!mr-1">build</mat-icon>
+          Szerviz
+        </a>
+        <a
+          mat-button
+          routerLink="/warehouse"
+          routerLinkActive="!bg-m3-primary-container !text-m3-on-primary-container font-semibold"
+        >
+          <mat-icon>inventory_2</mat-icon>
+          Raktár
+        </a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-2">
+      @if (isLoggedIn()) {
+        <button mat-icon-button class="!text-m3-on-surface-variant !hover:bg-m3-surface-variant/30">
+          <mat-icon>notifications</mat-icon>
+        </button>
+        <button mat-button [matMenuTriggerFor]="userMenu">
+          <div class="flex items-center gap-2">
+            <div
+              class="w-8 h-8 rounded-full bg-m3-primary-container text-m3-on-primary-container flex items-center justify-center font-semibold text-sm"
+            >
+              {{ userName().charAt(0) }}
+            </div>
+            <span class="hidden sm:inline font-medium text-sm">{{ userName() }}</span>
+            <mat-icon class="text-sm">arrow_drop_down</mat-icon>
+          </div>
+        </button>
+
+        <mat-menu
+          #userMenu="matMenu"
+          class="!bg-m3-surface !rounded-2xl border border-m3-outline/20"
+        >
+          <button mat-menu-item>
+            <mat-icon>person</mat-icon>
+            <span>Profiom</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>settings</mat-icon>
+            <span>Beállítások</span>
+          </button>
+          <div class="my-1 border-t border-m3-outline/30"></div>
+          <button mat-menu-item class="!text-m3-error">
+            <mat-icon class="!text-m3-error">logout</mat-icon>
+            <span>Kijelentkezés</span>
+          </button>
+        </mat-menu>
+      } @else {
+        <button mat-flat-button class="!bg-m3-primary !text-m3-on-primary !rounded-full">
+          <mat-icon>login</mat-icon>
+          <span>Bejelentkezés</span>
+        </button>
+      }
+    </div>
+  </div>
+</mat-toolbar>
