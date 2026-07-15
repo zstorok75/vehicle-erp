@@ -1,0 +1,33 @@
+<div class="flex-1 flex min-h-0">
+  <aside
+    class="!bg-m3-surface !text-m3-on-surface border-r border-m3-outline/30 p-4 flex flex-col gap-2 shrink-0 overflow-y-auto transition-all duration-300"
+  >
+    <nav class="flex flex-col gap-1">
+      <a
+        matButton
+        routerLink="/vehicles/list"
+        routerLinkActive="!bg-m3-primary-container !text-m3-on-primary-container font-semibold"
+        class="!justify-start !rounded-full"
+      >
+        <mat-icon class="mr-1">
+          <span class="material-symbols-outlined"> lists </span>
+        </mat-icon>
+        Járművek listája
+      </a>
+      <a
+        matButton
+        routerLink="/vehicles/form"
+        routerLinkActive="!bg-m3-primary-container !text-m3-on-primary-container font-semibold"
+        class="!justify-start !rounded-full"
+      >
+        <mat-icon class="mr-2">
+          <span class="material-symbols-outlined"> assignment_add </span>
+        </mat-icon>
+        Új jármű felvétele
+      </a>
+    </nav>
+  </aside>
+  <main class="flex-1 p-6 overflow-y-auto">
+    <router-outlet></router-outlet>
+  </main>
+</div>
