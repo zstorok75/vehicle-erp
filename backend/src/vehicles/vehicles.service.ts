@@ -24,4 +24,12 @@ export class VehiclesService implements OnModuleInit {
   async findAll(): Promise<Vehicle[]> {
     return await this.vehicleRepository.find();
   }
+
+  // Lekérni egy autót az "id" alapján
+  async findOne(id: number): Promise<Vehicle | null> {
+    const vehicle: Vehicle | null = await this.vehicleRepository.findOne({
+      where: { id: id },
+    });
+    return vehicle;
+  }
 }

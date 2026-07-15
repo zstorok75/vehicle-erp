@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { VehiclesService } from './vehicles.service';
 import { CreateVehicleDto } from './dto/create-vehicle.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -18,11 +18,10 @@ export class VehiclesController {
     return this.vehiclesService.findAll();
   }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   // return this.vehiclesService.findOne(+id); // A '+' jel számmá alakítja a stringet
-  //   throw new Error('This endpoint doesn`t work yet');
-  // }
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.vehiclesService.findOne(+id); // A '+' jel számmá alakítja a stringet
+  }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
