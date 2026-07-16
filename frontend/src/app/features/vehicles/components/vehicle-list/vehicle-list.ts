@@ -2,10 +2,10 @@ import { Component, effect, inject, OnInit, viewChild } from '@angular/core';
 import { VehicleService } from '../../services/vehicle.service';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { UpdateVehicle } from '../../models/updateVehicle.interface';
-import { Vehicle } from '../../models/vehicle.interface';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle-list',
@@ -15,8 +15,9 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 })
 export class VehicleList implements OnInit {
   private vehicleService = inject(VehicleService);
-  listData = new MatTableDataSource<UpdateVehicle>();
+  private router = inject(Router);
   private sort = viewChild(MatSort);
+  listData = new MatTableDataSource<UpdateVehicle>();
   displayedColumns: string[] = ['index', 'brand', 'model', 'vin', 'licensePlate', 'productionYear'];
 
   constructor() {
@@ -36,8 +37,8 @@ export class VehicleList implements OnInit {
     this.vehicleService.getAllVehicles();
   }
 
-  selectVehicle(vehicle: Vehicle) {
-    console.log(`Kattintottam a ${vehicle.id} járműre`);
+  selectVehicle(id: number) {
+    this.router.navigate(['/vehicles', id]);
   }
 
   applyFilter(event: Event) {

@@ -139,7 +139,7 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
       <tr
         mat-row
-        (click)="selectVehicle(row)"
+        (click)="selectVehicle(row.id)"
         *matRowDef="let row; columns: displayedColumns"
         matRipple
         class="group hover:bg-m3-inverse-primary/30 transition-colors duration-300 cursor-pointer"
