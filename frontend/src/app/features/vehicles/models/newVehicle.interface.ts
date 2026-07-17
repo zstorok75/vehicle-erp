@@ -1,4 +1,4 @@
-export interface Vehicle {
+export interface NewVehicle {
   id?: number;
   licensePlate?: string;
   vin: string;

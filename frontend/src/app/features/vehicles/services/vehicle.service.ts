@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service, signal, WritableSignal } from '@angular/core';
-import { Vehicle } from '../models/vehicle.interface';
+import { NewVehicle } from '../models/newVehicle.interface';
 import { UpdateVehicle } from '../models/updateVehicle.interface';
 
 @Service()
@@ -17,10 +17,10 @@ export class VehicleService {
   private _error: WritableSignal<string[]> = signal([]);
   readonly error = this._error.asReadonly();
 
-  saveVehicle(newVehicle: Vehicle): void {
-    this.http.post<Vehicle>(this.apiUrl, newVehicle).subscribe({
-      next: (vehicle) => {
-        this._createdVehicle.set(vehicle);
+  saveVehicle(newVehicle: NewVehicle): void {
+    this.http.post<UpdateVehicle>(this.apiUrl, newVehicle).subscribe({
+      next: (vehicle: UpdateVehicle) => {
+        this._vehicle.set(vehicle);
       },
       error: (err) => this._error.set(err),
     });
