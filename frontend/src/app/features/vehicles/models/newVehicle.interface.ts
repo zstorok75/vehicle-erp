@@ -1,4 +1,4 @@
-export interface NewVehicle {
+export type NewVehicle = {
   id?: number;
   licensePlate?: string;
   vin: string;
@@ -6,4 +6,4 @@ export interface NewVehicle {
   model: string;
   productionYear: number;
   createdAt?: string;
-}
+};

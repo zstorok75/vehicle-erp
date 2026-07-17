@@ -1,4 +1,4 @@
-import { Component, effect, inject, Signal } from '@angular/core';
+import { Component, effect, inject, OnInit, signal, Signal, WritableSignal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,7 +6,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { VehicleService } from '../../services/vehicle.service';
-import { Vehicle } from '../../models/vehicle.interface';
+import { NewVehicle } from '../../models/newVehicle.interface';
+import { UpdateVehicle } from '../../models/updateVehicle.interface';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -21,38 +23,49 @@ import { Vehicle } from '../../models/vehicle.interface';
   templateUrl: './vehicle-form.html',
   styleUrl: './vehicle-form.scss',
 })
-export class VehicleForm {
+export class VehicleForm implements OnInit {
   private fb = inject(FormBuilder);
   private vehicleService = inject(VehicleService);
-  maxYear = new Date().getFullYear();
+  private activatedRoute = inject(ActivatedRoute);
+
+  error: Signal<string[]> = this.vehicleService.error;
+  vehicle: Signal<UpdateVehicle | null> = this.vehicleService.vehicle;
 
   vehicleForm = this.fb.group(this.initVehicleForm());
-  error: Signal<string[]> = this.vehicleService.error;
-  selectedVehicle: Signal<Vehicle | null> = this.vehicleService.createdVehicle;
+  maxYear = new Date().getFullYear();
 
   constructor() {
     effect(() => {
-      const _hasError = this.error();
-      if (_hasError) {
-        console.log(`A következő hibákat találtuk: ${_hasError}`);
-      }
-    });
-    effect(() => {
-      const _hasVehicle = this.selectedVehicle();
+      const _hasVehicle = this.vehicle();
       if (_hasVehicle) {
-        console.log(_hasVehicle);
+        this.setDataToForm(_hasVehicle);
       }
     });
+  }
+
+  ngOnInit(): void {
+    const vehicleId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
+    console.log(`VehicleForm: ${vehicleId}`);
+    if (vehicleId) {
+      this.vehicleService.getVehicleById(vehicleId);
+    }
   }
 
   onSubmit() {
     if (this.vehicleForm.valid) {
       console.log('🚀 Beküldésre kész adatok:', this.vehicleForm.value);
-      const newVehicle: Vehicle = this.mapFormDataToVehicle(this.vehicleForm.value);
+      const newVehicle: NewVehicle = this.mapFormDataToVehicle(
+        this.vehicleForm.value,
+      ) as NewVehicle;
       this.vehicleService.saveVehicle(newVehicle);
     } else {
       console.log(`❌ Az űrlap érvénytelen, javítsd a hibákat! ${this.error()}`);
     }
+  }
+
+  setDataToForm(data: UpdateVehicle): void {
+    console.log(data);
+    this.vehicleForm.setValue(data);
   }
 
   resetForm(): void {
@@ -60,14 +73,38 @@ export class VehicleForm {
     this.vehicleForm.updateValueAndValidity();
   }
 
-  private mapFormDataToVehicle(data: any): Vehicle {
-    const vehicle: Vehicle = {
-      vin: data.vin,
-      brand: data.brand,
-      model: data.model,
-      productionYear: Number(data.productionYear),
-    };
-    return vehicle;
+  private mapFormDataToVehicle(data: any): NewVehicle | UpdateVehicle {
+    console.log(data);
+
+    if (data.id && data.createdAt) {
+      const updatedVehicle: UpdateVehicle = {
+        id: Number(data.id!),
+        vin: data.vin,
+        brand: data.brand,
+        model: data.model,
+        productionYear: data.productionYear,
+        createdAt: data.createdAt!,
+      };
+      if (data.licensePlate) {
+        updatedVehicle.licensePlate = data.licensePlate;
+      }
+      console.log(updatedVehicle);
+      return updatedVehicle;
+    } else if (!data.id && !data.createdAt) {
+      const newVehicle: NewVehicle = {
+        vin: data.vin,
+        brand: data.brand,
+        model: data.model,
+        productionYear: Number(data.productionYear),
+      };
+      if (data.licensePlate) {
+        newVehicle.licensePlate = data.licensePlate;
+      }
+      console.log(newVehicle);
+      return newVehicle;
+    } else {
+      throw new Error('');
+    }
   }
 
   private initVehicleForm(): Record<string, any> {

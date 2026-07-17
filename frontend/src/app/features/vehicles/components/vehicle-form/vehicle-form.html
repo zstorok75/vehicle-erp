@@ -7,17 +7,20 @@
   >
     <div>
       <h2 class="text-2xl font-semibold tracking-tight">
-        {{ selectedVehicle() ? 'Jármű adatainak módosítása' : 'Új jármű rögzítése' }}
+        {{ vehicle() ? 'Jármű adatainak módosítása' : 'Új jármű rögzítése' }}
       </h2>
-      <p class="text-sm mt-1">Add meg a gépjármű azonosításához szükséges adatokat.</p>
+      @if (!vehicle()) {
+        <p class="text-sm mt-1">Add meg a gépjármű azonosításához szükséges adatokat.</p>
+      }
     </div>
 
-    @if (selectedVehicle()?.createdAt) {
+    @if (vehicle()?.createdAt) {
       <div
-        class="mt-2 md:mt-0 flex items-center gap-1.5 px-3 py-1.5 text-m3-on-primary-container text-xs font-medium"
+        class="mt-2 md:mt-0 flex flex-col items-center gap-1.5 px-3 py-1.5 text-m3-on-primary-container/60 text-[10px] leading-3 font-medium"
       >
         <!-- <mat-icon class="scale-75 w-4 h-4 leading-none">calendar_today</mat-icon> -->
-        <span>Rögzítve: {{ selectedVehicle()?.createdAt | date: 'medium' }}</span>
+        <span>A rendszerben rögzítve:</span>
+        <span>{{ vehicle()?.createdAt | date: 'medium' }}</span>
       </div>
     }
   </div>
@@ -89,7 +92,7 @@
         [disabled]="this.vehicleForm.invalid"
       >
         <mat-icon class="mr-2 text-m3-on-primary-container">save</mat-icon>
-        {{ selectedVehicle() ? 'Módosítások mentése' : 'Jármű mentése' }}
+        {{ vehicle() ? 'Módosítások mentése' : 'Jármű mentése' }}
       </button>
     </div>
   </form>
