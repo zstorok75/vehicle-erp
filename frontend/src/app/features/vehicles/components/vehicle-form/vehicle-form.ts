@@ -1,14 +1,15 @@
-import { Component, effect, inject, OnInit, signal, Signal, WritableSignal } from '@angular/core';
+import { Component, effect, inject, OnInit, Signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
-import { VehicleService } from '../../services/vehicle.service';
+import { VehicleStoreService } from '../../services/vehicle.store.service';
 import { NewVehicle } from '../../models/newVehicle.interface';
 import { UpdateVehicle } from '../../models/updateVehicle.interface';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { UppercaseDirective } from '../../../../shared/directives/uppercase';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -19,20 +20,21 @@ import { ActivatedRoute, Router } from '@angular/router';
     MatButtonModule,
     MatIconModule,
     DatePipe,
+    UppercaseDirective,
   ],
   templateUrl: './vehicle-form.html',
   styleUrl: './vehicle-form.scss',
 })
 export class VehicleForm implements OnInit {
   private fb = inject(FormBuilder);
-  private vehicleService = inject(VehicleService);
+  private vehicleService = inject(VehicleStoreService);
   private activatedRoute = inject(ActivatedRoute);
 
-  error: Signal<string[]> = this.vehicleService.error;
+  error: Signal<string[] | null> = this.vehicleService.error;
   vehicle: Signal<UpdateVehicle | null> = this.vehicleService.vehicle;
 
   vehicleForm = this.fb.group(this.initVehicleForm());
-  maxYear = new Date().getFullYear();
+  maxYear = new Date().getFullYear() + 1;
 
   constructor() {
     effect(() => {
@@ -45,7 +47,6 @@ export class VehicleForm implements OnInit {
 
   ngOnInit(): void {
     const vehicleId = Number(this.activatedRoute.snapshot.paramMap.get('id'));
-    console.log(`VehicleForm: ${vehicleId}`);
     if (vehicleId) {
       this.vehicleService.getVehicleById(vehicleId);
     }
@@ -54,17 +55,23 @@ export class VehicleForm implements OnInit {
   onSubmit() {
     if (this.vehicleForm.valid) {
       console.log('🚀 Beküldésre kész adatok:', this.vehicleForm.value);
-      const newVehicle: NewVehicle = this.mapFormDataToVehicle(
-        this.vehicleForm.value,
-      ) as NewVehicle;
-      this.vehicleService.saveVehicle(newVehicle);
+      if (this.vehicleForm.get('id')?.value == '') {
+        const newVehicle: NewVehicle = this.mapFormDataToVehicle(
+          this.vehicleForm.value,
+        ) as NewVehicle;
+        this.vehicleService.saveVehicle(newVehicle);
+      } else {
+        const updatedVehicle: UpdateVehicle = this.mapFormDataToVehicle(
+          this.vehicleForm.value,
+        ) as UpdateVehicle;
+        this.vehicleService.updateVehicle(updatedVehicle);
+      }
     } else {
       console.log(`❌ Az űrlap érvénytelen, javítsd a hibákat! ${this.error()}`);
     }
   }
 
   setDataToForm(data: UpdateVehicle): void {
-    console.log(data);
     this.vehicleForm.setValue(data);
   }
 
@@ -74,8 +81,6 @@ export class VehicleForm implements OnInit {
   }
 
   private mapFormDataToVehicle(data: any): NewVehicle | UpdateVehicle {
-    console.log(data);
-
     if (data.id && data.createdAt) {
       const updatedVehicle: UpdateVehicle = {
         id: Number(data.id!),
@@ -88,7 +93,6 @@ export class VehicleForm implements OnInit {
       if (data.licensePlate) {
         updatedVehicle.licensePlate = data.licensePlate;
       }
-      console.log(updatedVehicle);
       return updatedVehicle;
     } else if (!data.id && !data.createdAt) {
       const newVehicle: NewVehicle = {
@@ -100,10 +104,9 @@ export class VehicleForm implements OnInit {
       if (data.licensePlate) {
         newVehicle.licensePlate = data.licensePlate;
       }
-      console.log(newVehicle);
       return newVehicle;
     } else {
-      throw new Error('');
+      throw new Error('Vehicle form: Nem lehet az adatokat konvertálni');
     }
   }
 

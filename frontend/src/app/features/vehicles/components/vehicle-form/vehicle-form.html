@@ -29,7 +29,13 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
       <mat-form-field appearance="fill" class="w-full">
         <mat-label class="text-m3-on-primary-container">Rendszám</mat-label>
-        <input matInput formControlName="licensePlate" placeholder="ABC-123 vagy AA-BB-123" />
+        <input
+          matInput
+          appUppercase
+          formControlName="licensePlate"
+          placeholder="ABC-123 vagy AA-BB-123"
+          appUppercase
+        />
         <mat-icon matSuffix class="text-m3-on-primary-container">badge</mat-icon>
         @if (vehicleForm.get('licensePlate')?.hasError('pattern')) {
           <mat-error>Helytelen rendszám formátum!</mat-error>
@@ -38,7 +44,7 @@
 
       <mat-form-field appearance="fill" class="w-full">
         <mat-label class="text-m3-on-primary-container">Alvázszám (VIN)</mat-label>
-        <input matInput #vin formControlName="vin" placeholder="17 jegyű azonosító" />
+        <input matInput appUppercase #vin formControlName="vin" placeholder="17 jegyű azonosító" />
         <mat-icon matSuffix class="text-m3-on-primary-container">fingerprint</mat-icon>
         <mat-hint align="start" class="text-m3-on-primary-container">
           Az alvázszám 17 karakter hosszú

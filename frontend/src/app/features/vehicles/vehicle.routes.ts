@@ -12,13 +12,18 @@ export const VEHICLE_ROUTES: Routes = [
         pathMatch: 'full',
       },
       {
+        path: 'new',
+        redirectTo: 'form',
+        pathMatch: 'full',
+      },
+      {
         path: 'list',
         loadComponent: () =>
           import('./components/vehicle-list/vehicle-list').then((m) => m.VehicleList),
         title: 'Járművek',
       },
       {
-        path: 'new',
+        path: 'form',
         loadComponent: () =>
           import('./components/vehicle-form/vehicle-form').then((m) => m.VehicleForm),
         title: 'Új jármű rögzítése',
