@@ -1,12 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { inject, Service, signal, WritableSignal } from '@angular/core';
 import { NewVehicle } from '../models/newVehicle.interface';
 import { UpdateVehicle } from '../models/updateVehicle.interface';
+import { VehicleApiService } from './vehicle.api.service';
 
 @Service()
-export class VehicleService {
-  private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/vehicles';
+export class VehicleStoreService {
+  private apiService = inject(VehicleApiService);
 
   private _vehicle: WritableSignal<UpdateVehicle | null> = signal(null);
   readonly vehicle = this._vehicle.asReadonly();
@@ -14,37 +13,58 @@ export class VehicleService {
   private _vehicleList: WritableSignal<UpdateVehicle[]> = signal([]);
   readonly vehicleList = this._vehicleList.asReadonly();
 
-  private _error: WritableSignal<string[]> = signal([]);
+  private _error: WritableSignal<string[] | null> = signal([]);
   readonly error = this._error.asReadonly();
 
   saveVehicle(newVehicle: NewVehicle): void {
-    this.http.post<UpdateVehicle>(this.apiUrl, newVehicle).subscribe({
+    this.apiService.saveVehicle(newVehicle).subscribe({
       next: (vehicle: UpdateVehicle) => {
         this._vehicle.set(vehicle);
+        this._error.set(null);
       },
-      error: (err) => this._error.set(err),
+      error: (err) => {
+        this._error.set(err);
+        this._vehicle.set(null);
+      },
+    });
+  }
+
+  updateVehicle(updatedVehicle: UpdateVehicle): void {
+    const updateId: number = updatedVehicle.id;
+    this.apiService.updateVehicle(updateId, updatedVehicle).subscribe({
+      next: (updatedData: UpdateVehicle) => {
+        this._vehicle.set(updatedData);
+        this._error.set(null);
+      },
+      error: (err) => {
+        this._error.set(err);
+        this._vehicle.set(null);
+      },
     });
   }
 
   getAllVehicles(): void {
-    this.http.get<UpdateVehicle[]>(this.apiUrl).subscribe({
+    this.apiService.getAllVehicles().subscribe({
       next: (list) => {
         this._vehicleList.set(list);
+        this._error.set(null);
       },
       error: (err) => {
         this._error.set(err);
+        this._vehicleList.set([]);
       },
     });
   }
 
   getVehicleById(id: number): void {
-    this.http.get<UpdateVehicle>(`${this.apiUrl}/${id}`).subscribe({
+    this.apiService.getVehicleById(id).subscribe({
       next: (vehicle: UpdateVehicle) => {
-        console.log(`Service: ${vehicle}`);
         this._vehicle.set(vehicle);
+        this._error.set(null);
       },
       error: (err) => {
         this._error.set(err);
+        this._vehicle.set(null);
       },
     });
   }
