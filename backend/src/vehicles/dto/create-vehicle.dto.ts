@@ -7,7 +7,9 @@ export class CreateVehicleDto {
   licensePlate?: string;
 
   @IsString()
-  @Length(17, 17)
+  @Length(17, 17, {
+    message: 'Az alvázszámnak pontosan 17 karakter hosszúnak kell lennie!',
+  })
   vin!: string;
 
   @IsString()
@@ -17,7 +19,9 @@ export class CreateVehicleDto {
   model!: string;
 
   @IsInt()
-  @Min(1900)
-  @Max(Number(new Date().getFullYear()))
+  @Min(1900, { message: 'A jármű gyártási ideje nem lehet 1900 elött!' })
+  @Max(Number(new Date().getFullYear()) + 1, {
+    message: 'A jármű nem lehet fiatalabb az aktuális gyártási évnél!',
+  })
   productionYear!: number;
 }
