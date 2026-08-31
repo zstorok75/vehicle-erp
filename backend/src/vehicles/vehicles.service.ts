@@ -16,7 +16,7 @@ export class VehiclesService {
   async create(createVehicleDto: CreateVehicleDto): Promise<Vehicle> {
     // A DTO alapján létrehozunk egy új Vehicle példányt
     const newVehicle = this.vehicleRepository.create(createVehicleDto);
-    return await this.vehicleRepository.save(newVehicle);
+    return this.vehicleRepository.save(newVehicle);
   }
 
   // Összes jármű lekérdezése
