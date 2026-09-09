@@ -20,18 +20,17 @@ export class VehiclesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.vehiclesService.findOne(+id); // A '+' jel számmá alakítja a stringet
+  findOneById(@Param('id') id: string) {
+    return this.vehiclesService.findOneById(+id, false); // A '+' jel számmá alakítja a stringet
+  }
+
+  @Get(':vin')
+  findOneByVin(@Param('vin') vin: string) {
+    return this.vehiclesService.findOneByVin(vin, false);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateVehicleDto: UpdateVehicleDto) {
     return this.vehiclesService.update(+id, updateVehicleDto);
   }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   // return this.vehiclesService.remove(+id);
-  //   throw new Error('This endpoint doesn`t work yet');
-  // }
 }

@@ -17,12 +17,11 @@ export class UpdateVehicleDto {
   @IsString()
   licensePlate?: string;
 
-  @IsOptional()
   @IsString()
   @Length(17, 17, {
     message: 'Az alvázszámnak pontosan 17 karakter hosszúnak kell lennie!',
   })
-  vin?: string;
+  vin!: string;
 
   @IsOptional()
   @IsString()
