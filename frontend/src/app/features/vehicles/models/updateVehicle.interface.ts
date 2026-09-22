@@ -1,7 +1,7 @@
 export type UpdateVehicle = {
   id: number;
   licensePlate?: string;
-  vin?: string;
+  vin: string;
   brand?: string;
   model?: string;
   productionYear?: number;

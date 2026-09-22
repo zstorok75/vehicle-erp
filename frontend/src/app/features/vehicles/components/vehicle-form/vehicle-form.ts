@@ -10,6 +10,8 @@ import { NewVehicle } from '../../models/newVehicle.interface';
 import { UpdateVehicle } from '../../models/updateVehicle.interface';
 import { ActivatedRoute } from '@angular/router';
 import { UppercaseDirective } from '../../../../shared/directives/uppercase';
+import { MatDialog } from '@angular/material/dialog';
+import { ErrorDialog } from '../../../../core/layout/error-dialog/error-dialog';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -27,10 +29,11 @@ import { UppercaseDirective } from '../../../../shared/directives/uppercase';
 })
 export class VehicleForm implements OnInit {
   private fb = inject(FormBuilder);
-  private vehicleService = inject(VehicleStoreService);
+  private dialog = inject(MatDialog);
   private activatedRoute = inject(ActivatedRoute);
+  private vehicleService = inject(VehicleStoreService);
 
-  error: Signal<string[] | null> = this.vehicleService.error;
+  error: Signal<string[] | string | null> = this.vehicleService.error;
   vehicle: Signal<UpdateVehicle | null> = this.vehicleService.vehicle;
 
   vehicleForm = this.fb.group(this.initVehicleForm());
@@ -38,9 +41,18 @@ export class VehicleForm implements OnInit {
 
   constructor() {
     effect(() => {
-      const _hasVehicle = this.vehicle();
+      let _hasVehicle = this.vehicle();
       if (_hasVehicle) {
         this.setDataToForm(_hasVehicle);
+      }
+    });
+    effect(() => {
+      const _error = this.error();
+      if (_error && _error.length > 0) {
+        const dialogRef = this.dialog.open(ErrorDialog, { data: _error });
+        dialogRef.afterClosed().subscribe(() => {
+          this.vehicleService.clearError();
+        });
       }
     });
   }
@@ -67,7 +79,7 @@ export class VehicleForm implements OnInit {
         this.vehicleService.updateVehicle(updatedVehicle);
       }
     } else {
-      console.log(`❌ Az űrlap érvénytelen, javítsd a hibákat! ${this.error()}`);
+      console.log('❌ Az űrlap érvénytelen, javítsd a hibákat!');
     }
   }
 
@@ -78,12 +90,13 @@ export class VehicleForm implements OnInit {
   resetForm(): void {
     this.vehicleForm.reset();
     this.vehicleForm.updateValueAndValidity();
+    this.vehicleService.clearVehicle();
   }
 
   private mapFormDataToVehicle(data: any): NewVehicle | UpdateVehicle {
-    if (data.id && data.createdAt) {
+    if (data.id && data.createdAt && data.vin) {
       const updatedVehicle: UpdateVehicle = {
-        id: Number(data.id!),
+        id: +data.id!,
         vin: data.vin,
         brand: data.brand,
         model: data.model,
@@ -94,7 +107,7 @@ export class VehicleForm implements OnInit {
         updatedVehicle.licensePlate = data.licensePlate;
       }
       return updatedVehicle;
-    } else if (!data.id && !data.createdAt) {
+    } else if (data.vin && (!data.id || !data.createdAt)) {
       const newVehicle: NewVehicle = {
         vin: data.vin,
         brand: data.brand,
