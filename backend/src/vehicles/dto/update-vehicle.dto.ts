@@ -40,8 +40,8 @@ export class UpdateVehicleDto {
   productionYear?: number;
 
   @IsOptional()
-  @IsDate()
-  @Min(Date.parse('1900, 1, 1'))
-  @Max(new Date().getFullYear())
-  createdAt!: Date;
+  @IsString()
+  //@Min(Date.parse('1900, 1, 1'))
+  //@Max(Date.parse(new Date().getTime().toString()))
+  createdAt!: string;
 }

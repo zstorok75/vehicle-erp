@@ -74,8 +74,8 @@ export class VehiclesService {
       );
       // összehasonlítani a kettőt id és vin alapján
       if (
-        vehicleById !== null &&
-        vehicleByVin !== null &&
+        vehicleById &&
+        vehicleByVin &&
         vehicleById.vin === vehicleByVin.vin &&
         vehicleById.id === vehicleByVin.id
       ) {
@@ -84,7 +84,7 @@ export class VehiclesService {
         return this.findOneById(id, false);
       } else {
         throw new HttpException(
-          'A megadott ID és a jármű ID nem azonos',
+          'Ezzel az alvázszámmal már szerepel jármű a rendszerben!',
           HttpStatus.BAD_REQUEST,
         );
       }
