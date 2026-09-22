@@ -1,0 +1,15 @@
+<div class="grid bg-m3-error-container">
+  <h2 mat-dialog-title class="!text-m3-on-error-container !font-bold justify-self-center">
+    HIBA TÖRTÉNT!
+  </h2>
+  <mat-dialog-content class="border-t border-m3-on-error-container">
+    <ul>
+      @for (err of messages; track err) {
+        <li class="pt-4 font-medium">- {{ err }}</li>
+      }
+    </ul>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button matButton="text" [mat-dialog-close]="true" aria-label="Close">Bezár</button>
+  </mat-dialog-actions>
+</div>

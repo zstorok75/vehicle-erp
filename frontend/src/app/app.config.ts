@@ -8,6 +8,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './app.routes';
+import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialogConfig } from '@angular/material/dialog';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,5 +17,13 @@ export const appConfig: ApplicationConfig = {
     // provideRouter(routes, withComponentInputBinding(), withViewTransitions()),
     provideRouter(routes),
     provideHttpClient(),
+    {
+      provide: MAT_DIALOG_DEFAULT_OPTIONS,
+      useValue: {
+        ...new MatDialogConfig(),
+        hasBackdrop: true,
+        disableClose: true,
+      },
+    },
   ],
 };
